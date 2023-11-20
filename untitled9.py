@@ -53,7 +53,7 @@ nu_num_points = 2000
 
 def values(r_num_points):
     # Create a radial grid with logarithmic spacing
-
+ 
     r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = r_num_points)
 
 
@@ -139,11 +139,27 @@ for i in range(0,len (nu_grid)-1):
 
 log_nu_midpoints = np.log10(nu_midpoints)
 
-selected_log_nu_l_nu_100 = [j for j in values(100).tolist() if j >= 37.54]
-selected_log_nu_midpoints = log_nu_midpoints[0:len(selected_log_nu_l_nu_100)]
 
-selected_log_nu_l_nu_2000 = [j for j in values(2000).tolist() if j >= 37.54]
-selected_log_nu_midpoints_2 = log_nu_midpoints[0:len(selected_log_nu_l_nu_2000)]
+selected_log_nu_l_nu_100 = []
+selected_log_nu_midpoints = []
+
+for i in values(100).tolist():
+    if i >= 37.54:        
+        selected_log_nu_l_nu_100.append(i)
+        j = values(100).tolist().index(i)
+        selected_log_nu_midpoints.append(log_nu_midpoints[j])
+        
+selected_log_nu_l_nu_2000= []
+selected_log_nu_midpoints_2 = []
+
+for i in values(2000).tolist():
+    if i >= 37.54:        
+        selected_log_nu_l_nu_2000.append(i)
+        j = values(2000).tolist().index(i)
+        selected_log_nu_midpoints_2.append(log_nu_midpoints[j])
+
+#selected_log_nu_l_nu_2000 = [j for j in values(2000).tolist() if j >= 37.54]
+#selected_log_nu_midpoints_2 = log_nu_midpoints[0:len(selected_log_nu_l_nu_2000)]
 
 
 
