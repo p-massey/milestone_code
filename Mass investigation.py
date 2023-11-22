@@ -44,7 +44,7 @@ nu_max = 1e20
 def nuLnu(mass):
     
     def T(rad):
-        numerator = 3 * g_big_cgs * m_dot * mass
+        numerator = 3 * g_big_cgs * m_dot * mass * m_sol_cgs
         denominator = 8 * np.pi * (rad)**3 * r_g**3 * sigma_cgs
         bracket = 1 - np.sqrt(r_in/(rad))
         return ((numerator/denominator)*bracket)**0.25
@@ -108,6 +108,29 @@ def nuLnu(mass):
     
     return log_nu_l_nu
 
-mass_grid = np.linspace(3, 30, num = 20)
+mass_grid = np.linspace(3, 30, num = 4)
+
+print(mass_grid)
+
+nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
+
+nu_midpoints = []
+for i in range(0,len (nu_grid)-1):
+    m = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
+    nu_midpoints.append(m)
+
+log_nu_midpoints = np.log10(nu_midpoints)
+
+
+plt.figure(dpi=600)
+for i in mass_grid:
+    plt.scatter(log_nu_midpoints, nuLnu(int(i)), s=1, label= f'm = {i}')
+plt.xlabel(r'$\nu$')
+plt.ylabel(r'$\nu L_\nu$')
+plt.grid(False)
+plt.ylim(0, 40)
+plt.legend()
+plt.show()
+
 
 
