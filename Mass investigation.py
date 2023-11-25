@@ -51,7 +51,7 @@ def nuLnu(mass):
     
     # Create a radial grid with logarithmic spacing
 
-    r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = 2000)
+    r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = 1000)
 
 
     # Calculate midpoints of the bins
@@ -71,7 +71,7 @@ def nuLnu(mass):
 
     # Create a frequency grid with logarithmic spacing
 
-    nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
+    nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
 
 
     # define the integrand for luminosity function
@@ -108,11 +108,11 @@ def nuLnu(mass):
     
     return log_nu_l_nu
 
-mass_grid = np.linspace(3, 30, num = 4)
+mass_grid = np.linspace(np.log10(3), np.log10(10e7), num = 10)
 
 print(mass_grid)
 
-nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
+nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
 
 nu_midpoints = []
 for i in range(0,len (nu_grid)-1):
@@ -124,12 +124,12 @@ log_nu_midpoints = np.log10(nu_midpoints)
 
 plt.figure(dpi=600)
 for i in mass_grid:
-    plt.scatter(log_nu_midpoints, nuLnu(int(i)), s=1, label= f'm = {i}')
+    plt.scatter(log_nu_midpoints, nuLnu(10**i), s=1, label= f'm = {int(10**i)} $M_\odot$')
 plt.xlabel(r'$log_{10}$[$\nu$ (Hz)]')
 plt.ylabel(r'l$log_{10}$[$\nu L_{\nu}$ (erg $s^{-1}$)]')
 plt.grid(False)
-plt.ylim(0, 40)
 plt.legend()
+
 plt.show()
 
 
