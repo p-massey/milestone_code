@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Created on Sun Nov 26 15:46:27 2023
+
+@author: peterm
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
 Created on Mon Nov 20 18:20:18 2023
 
 @author: peterm
@@ -41,10 +49,10 @@ nu_max = 1e30
 
 
 
-def nuLnu(mass):
+def nuLnu(mass, arate):
     
     def T(rad):
-        numerator = 3 * g_big_cgs * m_dot * mass * m_sol_cgs
+        numerator = 3 * g_big_cgs * arate * mass * m_sol_cgs
         denominator = 8 * np.pi * (rad)**3 * r_g**3 * sigma_cgs
         bracket = 1 - np.sqrt(r_in/(rad))
         return ((numerator/denominator)*bracket)**0.25
@@ -121,14 +129,16 @@ for i in range(0,len (nu_grid)-1):
 
 log_nu_midpoints = np.log10(nu_midpoints)
 
+m_dot_grid = np.linspace(np.log10(1e15), np.log10(1e20), num=10)
+
 
 plt.figure(dpi=600)
-for i in mass_grid:
-    plt.scatter(log_nu_midpoints, nuLnu(10**i), s=1, label= f'm = {int(10**i)} $M_\odot$')
+for i in m_dot_grid:
+    plt.scatter(log_nu_midpoints, nuLnu(10, 10**i), s=1, label= f'$\dot{m} = {int(i)} gs^{-1}$')
 plt.xlabel(r'$log_{10}$[$\nu$ (Hz)]')
 plt.ylabel(r'$log_{10}$[$\nu L_{\nu}$ (erg $s^{-1}$)]')
 plt.grid(False)
-#plt.legend()
+plt.legend()
 plt.ylim(0,)
 plt.show()
 

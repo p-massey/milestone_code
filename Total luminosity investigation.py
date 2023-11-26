@@ -129,9 +129,35 @@ luminosities = np.log10(total_luminosity(10**mass_grid))
 
 print(luminosities)
 
+nu_min1 = 1e10  
+nu_max1 = 1e30 
+
+nu_grid1 = np.linspace(np.log10(nu_min1), np.log10(nu_max1), num = 1000)
+nu_midpoints1 = []
+for i in range(0,len (nu_grid)-1):
+    m = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
+    nu_midpoints1.append(m)
+
+def total_luminosity1(mass):
+    area =[]
+    y=nuLnu(mass)
+    for i in range(0,len(nu_midpoints1)):
+        
+        rect = y[i]*(10**nu_grid1[i+1]-10**nu_grid1[i])
+        area.append(rect)
+    return sum(area)
+
+luminosities1 = np.log10(total_luminosity1(10**mass_grid))
+
+
 plt.figure(dpi=1000)
-plt.scatter(mass_grid, luminosities, s=2)
+plt.scatter(mass_grid, luminosities, s=2, label='nu 1e13 - 1e30')
+plt.scatter(mass_grid, luminosities1, s=2, label='nu 1e10 - 1e30')
 plt.xlabel(r'$log_{10}$[Mass of black hole (g)]')
 plt.ylabel(r'$log_{10}$[Total luminosity (erg)]')
+plt.legend()
 plt.grid(False)
 plt.show()
+
+
+
