@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 20 18:20:18 2023
+Created on Sat Nov 25 17:56:31 2023
 
 @author: peterm
 """
@@ -36,10 +36,6 @@ r_out = 1e5
 
 nu_min = 1e13  
 nu_max = 1e30 
-
-# Define temperature function
-
-
 
 def nuLnu(mass):
     
@@ -106,31 +102,36 @@ def nuLnu(mass):
         
     log_nu_l_nu = np.log10(nu_l_nu)
     
-    return log_nu_l_nu
+    return integral_values
 
-mass_grid = np.linspace(np.log10(3), np.log10(10e7), num = 10)
 
-print(mass_grid)
 
 nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
-
 nu_midpoints = []
 for i in range(0,len (nu_grid)-1):
     m = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
     nu_midpoints.append(m)
 
-log_nu_midpoints = np.log10(nu_midpoints)
+def total_luminosity(mass):
+    area =[]
+    y=nuLnu(mass)
+    for i in range(0,len(nu_midpoints)):
+        
+        rect = y[i]*(10**nu_grid[i+1]-10**nu_grid[i])
+        area.append(rect)
+    return sum(area)
 
+print(total_luminosity(3000))
 
-plt.figure(dpi=600)
-for i in mass_grid:
-    plt.scatter(log_nu_midpoints, nuLnu(10**i), s=1, label= f'm = {int(10**i)} $M_\odot$')
-plt.xlabel(r'$log_{10}$[$\nu$ (Hz)]')
-plt.ylabel(r'$log_{10}$[$\nu L_{\nu}$ (erg $s^{-1}$)]')
+mass_grid = np.linspace(np.log10(3), np.log10(10e7), num = 10)
+
+luminosities = np.log10(total_luminosity(10**mass_grid))
+
+print(luminosities)
+
+plt.figure(dpi=1000)
+plt.scatter(mass_grid, luminosities, s=2)
+plt.xlabel(r'$log_{10}$[Mass of black hole (g)]')
+plt.ylabel(r'$log_{10}$[Total luminosity (erg)]')
 plt.grid(False)
-#plt.legend()
-plt.ylim(0,)
 plt.show()
-
-
-
