@@ -132,5 +132,8 @@ plt.grid(False)
 plt.ylim(0,)
 plt.show()
 
+# Define the integration limits
 
+r_in = 6
+r_out = 1e5
 

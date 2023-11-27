@@ -134,7 +134,7 @@ m_dot_grid = np.linspace(np.log10(1e15), np.log10(1e20), num=10)
 
 plt.figure(dpi=600)
 for i in m_dot_grid:
-    plt.scatter(log_nu_midpoints, nuLnu(10, 10**i), s=1, label= f'$\dot{m} = {int(i)} gs^{-1}$')
+    plt.scatter(log_nu_midpoints, nuLnu(10, 10**i), s=1, label= f'$\dot M$ = {10**i} ' r'$g^{-1}$')
 plt.xlabel(r'$log_{10}$[$\nu$ (Hz)]')
 plt.ylabel(r'$log_{10}$[$\nu L_{\nu}$ (erg $s^{-1}$)]')
 plt.grid(False)
