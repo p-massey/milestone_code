@@ -189,6 +189,12 @@ selected_log_nu_midpoints = log_nu_midpoints[0:len(selected_log_nu_l_nu)]
 
 print(selected_log_nu_l_nu)
 
+plt.figure(dpi=1000)
+plt.scatter(log_nu_midpoints, log_nu_l_nu, s=1)
+plt.xlabel(r'log[$\nu$ (Hz)]')
+plt.ylabel(r'log[$\nu L_{\nu}$ (erg $s^{-1}$)]')
+plt.grid(False)
+plt.show()
 
 plt.figure(dpi=1000)
 plt.scatter(selected_log_nu_midpoints, selected_log_nu_l_nu, s=1)

@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 20 18:20:18 2023
+Created on Thu Jan 18 15:55:09 2024
+
+@author: peterm
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Oct 30 12:09:29 2023
 
 @author: peterm
 """
 
 import numpy as np
+from scipy.integrate import simpson
 import matplotlib.pyplot as plt
 
 # Constants
@@ -20,11 +29,11 @@ k = 1.380649e-16  # erg/K
 
 # Accretion rate
 
-m_dot = 1e18
+m_dot = 5.4e20
 
 # Define the Schwarzschild radius
 
-m = 10*m_sol_cgs  # Replace with the desired mass
+m = 30e6*m_sol_cgs  # Replace with the desired mass
 r_g = g_big_cgs * m / c_cgs**2
 
 # Define the integration limits
@@ -34,12 +43,8 @@ r_out = 1e5
 
 # Define the range of nu values
 
-nu_min = 1e10  
-nu_max = 1e30 
-
-# Define temperature function
-
-
+nu_min = 1e14  
+nu_max = 1e19  
 
 def nuLnu(mass):
     
@@ -109,35 +114,17 @@ def nuLnu(mass):
     return log_nu_l_nu
 
 
-xs = [4, 5, 6, 7, 8, 9, 10]
-    
-mass_grid = [np.log10(10**i) for i in xs]
-
-
-m_values=[r'$1\times10^{5}$', r'$5\times10^{5}$']
-
 nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
 
-nu_midpoints = []
+nu_midpoints1 = []
 for i in range(0,len (nu_grid)-1):
     m = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
-    nu_midpoints.append(m)
+    nu_midpoints1.append(m)
 
-log_nu_midpoints = np.log10(nu_midpoints)
-
-
-plt.figure(dpi=600)
-for i in mass_grid:
-    plt.scatter(log_nu_midpoints, nuLnu(10**i), s=1, label= f'm = {int(10**i)} $M_\odot$')
+plt.figure(dpi=1000)
+plt.scatter(np.log10(nu_midpoints1), nuLnu(m), s=2, label='nu 1e10 - 1e30')
 plt.xlabel(r'$log_{10}$[$\nu$ (Hz)]')
 plt.ylabel(r'$log_{10}$[$\nu L_{\nu}$ (erg $s^{-1}$)]')
-plt.grid(False)
 plt.legend()
-plt.ylim(0,)
+plt.grid(False)
 plt.show()
-
-# Define the integration limits
-
-r_in = 6
-r_out = 1e5
-

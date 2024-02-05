@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 20 18:20:18 2023
+Created on Sun Jan 28 12:53:33 2024
 
 @author: peterm
 """
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -34,12 +35,8 @@ r_out = 1e5
 
 # Define the range of nu values
 
-nu_min = 1e10  
-nu_max = 1e30 
-
-# Define temperature function
-
-
+nu_min = 1e16  
+nu_max = 1e22 
 
 def nuLnu(mass):
     
@@ -51,7 +48,7 @@ def nuLnu(mass):
     
     # Create a radial grid with logarithmic spacing
 
-    r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = 1000)
+    r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = 2000)
 
 
     # Calculate midpoints of the bins
@@ -71,7 +68,7 @@ def nuLnu(mass):
 
     # Create a frequency grid with logarithmic spacing
 
-    nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
+    nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
 
 
     # define the integrand for luminosity function
@@ -106,38 +103,40 @@ def nuLnu(mass):
         
     log_nu_l_nu = np.log10(nu_l_nu)
     
-    return log_nu_l_nu
+    return integral_values
 
 
-xs = [4, 5, 6, 7, 8, 9, 10]
-    
-mass_grid = [np.log10(10**i) for i in xs]
 
-
-m_values=[r'$1\times10^{5}$', r'$5\times10^{5}$']
-
-nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
-
+nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
 nu_midpoints = []
 for i in range(0,len (nu_grid)-1):
     m = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
     nu_midpoints.append(m)
 
-log_nu_midpoints = np.log10(nu_midpoints)
+def total_luminosity(mass):
+    area =[]
+    y=nuLnu(mass)
+    for i in range(0,len(nu_midpoints)):
+        
+        rect = y[i]*(10**nu_grid[i+1]-10**nu_grid[i])
+        area.append(rect)
+    return sum(area)
 
 
-plt.figure(dpi=600)
-for i in mass_grid:
-    plt.scatter(log_nu_midpoints, nuLnu(10**i), s=1, label= f'm = {int(10**i)} $M_\odot$')
-plt.xlabel(r'$log_{10}$[$\nu$ (Hz)]')
-plt.ylabel(r'$log_{10}$[$\nu L_{\nu}$ (erg $s^{-1}$)]')
-plt.grid(False)
+xs = [4, 5, 6, 7, 8, 9, 10]
+mass_grid = np.asarray(xs)
+
+luminosities = np.log10(total_luminosity(10**mass_grid))
+
+
+print(luminosities)
+
+
+plt.figure(dpi=1000)
+plt.scatter(mass_grid, luminosities, s=2, label='nu 1e16 - 1e22')
+#plt.scatter(mass_grid, luminosities1, s=2, label='nu 1e10 - 1e30')
+plt.xlabel(r'$log_{10}$[Mass of black hole ($M_\odot$)]')
+plt.ylabel(r'$log_{10}$[Total luminosity (erg)]')
 plt.legend()
-plt.ylim(0,)
+plt.grid(False)
 plt.show()
-
-# Define the integration limits
-
-r_in = 6
-r_out = 1e5
-

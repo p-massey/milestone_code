@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 20 18:20:18 2023
+Created on Sun Jan 28 19:49:00 2024
 
 @author: peterm
 """
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,34 +25,29 @@ m_dot = 1e18
 
 # Define the Schwarzschild radius
 
-m = 10*m_sol_cgs  # Replace with the desired mass
+m = 1e6*m_sol_cgs  # Replace with the desired mass
 r_g = g_big_cgs * m / c_cgs**2
 
 # Define the integration limits
 
 r_in = 6
-r_out = 1e5
 
 # Define the range of nu values
 
-nu_min = 1e10  
+nu_min = 1e10
 nu_max = 1e30 
 
-# Define temperature function
-
-
-
-def nuLnu(mass):
+def nuLnu(r_out):
     
     def T(rad):
-        numerator = 3 * g_big_cgs * m_dot * mass * m_sol_cgs
+        numerator = 3 * g_big_cgs * m_dot * m * m_sol_cgs
         denominator = 8 * np.pi * (rad)**3 * r_g**3 * sigma_cgs
         bracket = 1 - np.sqrt(r_in/(rad))
         return ((numerator/denominator)*bracket)**0.25
     
     # Create a radial grid with logarithmic spacing
 
-    r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = 1000)
+    r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = 2000)
 
 
     # Calculate midpoints of the bins
@@ -71,7 +67,7 @@ def nuLnu(mass):
 
     # Create a frequency grid with logarithmic spacing
 
-    nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
+    nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
 
 
     # define the integrand for luminosity function
@@ -106,38 +102,38 @@ def nuLnu(mass):
         
     log_nu_l_nu = np.log10(nu_l_nu)
     
-    return log_nu_l_nu
+    return integral_values
 
 
-xs = [4, 5, 6, 7, 8, 9, 10]
-    
-mass_grid = [np.log10(10**i) for i in xs]
 
-
-m_values=[r'$1\times10^{5}$', r'$5\times10^{5}$']
-
-nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
-
+nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
 nu_midpoints = []
 for i in range(0,len (nu_grid)-1):
     m = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
     nu_midpoints.append(m)
 
-log_nu_midpoints = np.log10(nu_midpoints)
+def total_luminosity(mass):
+    area =[]
+    y=nuLnu(mass)
+    for i in range(0,len(nu_midpoints)):
+        
+        rect = y[i]*(10**nu_grid[i+1]-10**nu_grid[i])
+        area.append(rect)
+    return sum(area)
 
 
-plt.figure(dpi=600)
-for i in mass_grid:
-    plt.scatter(log_nu_midpoints, nuLnu(10**i), s=1, label= f'm = {int(10**i)} $M_\odot$')
-plt.xlabel(r'$log_{10}$[$\nu$ (Hz)]')
-plt.ylabel(r'$log_{10}$[$\nu L_{\nu}$ (erg $s^{-1}$)]')
+r_out_grid = np.linspace(2, 10, num=9)
+
+print(r_out_grid)
+
+luminosities = np.log10(total_luminosity(10**r_out_grid))
+
+print(luminosities)
+
+
+plt.figure(dpi=1000)
+plt.scatter(r_out_grid, luminosities, s=2)
+plt.xlabel(r'$log_{10}$[Outer radius of black hole calculated to ($M_\odot$)]')
+plt.ylabel(r'$log_{10}$[Total luminosity (erg)]')
 plt.grid(False)
-plt.legend()
-plt.ylim(0,)
 plt.show()
-
-# Define the integration limits
-
-r_in = 6
-r_out = 1e5
-

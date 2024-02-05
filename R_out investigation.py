@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 20 18:20:18 2023
+Created on Sun Jan 28 14:58:15 2024
 
 @author: peterm
 """
@@ -24,34 +24,30 @@ m_dot = 1e18
 
 # Define the Schwarzschild radius
 
-m = 10*m_sol_cgs  # Replace with the desired mass
+m = 1e6*m_sol_cgs  # Replace with the desired mass
 r_g = g_big_cgs * m / c_cgs**2
 
 # Define the integration limits
 
 r_in = 6
-r_out = 1e5
+
 
 # Define the range of nu values
 
 nu_min = 1e10  
-nu_max = 1e30 
+nu_max = 1e30
 
-# Define temperature function
-
-
-
-def nuLnu(mass):
+def nuLnu(r_out):
     
     def T(rad):
-        numerator = 3 * g_big_cgs * m_dot * mass * m_sol_cgs
+        numerator = 3 * g_big_cgs * m_dot * m * m_sol_cgs
         denominator = 8 * np.pi * (rad)**3 * r_g**3 * sigma_cgs
         bracket = 1 - np.sqrt(r_in/(rad))
         return ((numerator/denominator)*bracket)**0.25
     
     # Create a radial grid with logarithmic spacing
 
-    r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = 1000)
+    r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = 2000)
 
 
     # Calculate midpoints of the bins
@@ -71,7 +67,7 @@ def nuLnu(mass):
 
     # Create a frequency grid with logarithmic spacing
 
-    nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
+    nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
 
 
     # define the integrand for luminosity function
@@ -108,15 +104,7 @@ def nuLnu(mass):
     
     return log_nu_l_nu
 
-
-xs = [4, 5, 6, 7, 8, 9, 10]
-    
-mass_grid = [np.log10(10**i) for i in xs]
-
-
-m_values=[r'$1\times10^{5}$', r'$5\times10^{5}$']
-
-nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
+nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
 
 nu_midpoints = []
 for i in range(0,len (nu_grid)-1):
@@ -125,19 +113,17 @@ for i in range(0,len (nu_grid)-1):
 
 log_nu_midpoints = np.log10(nu_midpoints)
 
+r_out_grid = np.logspace(2, 10, num=9)
 
-plt.figure(dpi=600)
-for i in mass_grid:
-    plt.scatter(log_nu_midpoints, nuLnu(10**i), s=1, label= f'm = {int(10**i)} $M_\odot$')
+
+plt.figure(figsize=(10, 5)  ,dpi=600)
+
+
+for i in r_out_grid:
+    plt.scatter(log_nu_midpoints, nuLnu(i), s=1, label= r'$r_{out} =$' f'{int(i)}' r'$R_g$')
 plt.xlabel(r'$log_{10}$[$\nu$ (Hz)]')
 plt.ylabel(r'$log_{10}$[$\nu L_{\nu}$ (erg $s^{-1}$)]')
 plt.grid(False)
 plt.legend()
 plt.ylim(0,)
 plt.show()
-
-# Define the integration limits
-
-r_in = 6
-r_out = 1e5
-

@@ -43,6 +43,8 @@ nu_max = 1e30
 
 def nuLnu(mass):
     
+    r_g = g_big_cgs * (mass*m_sol_cgs) / c_cgs**2
+    
     def T(rad):
         numerator = 3 * g_big_cgs * m_dot * mass * m_sol_cgs
         denominator = 8 * np.pi * (rad)**3 * r_g**3 * sigma_cgs
@@ -109,9 +111,9 @@ def nuLnu(mass):
     return log_nu_l_nu
 
 
-xs = [4, 5, 6, 7, 8, 9, 10]
+xs = [3, 6, 11, 20, 37, 78]
     
-mass_grid = [np.log10(10**i) for i in xs]
+mass_grid = [i for i in xs]
 
 
 m_values=[r'$1\times10^{5}$', r'$5\times10^{5}$']
@@ -128,16 +130,11 @@ log_nu_midpoints = np.log10(nu_midpoints)
 
 plt.figure(dpi=600)
 for i in mass_grid:
-    plt.scatter(log_nu_midpoints, nuLnu(10**i), s=1, label= f'm = {int(10**i)} $M_\odot$')
+    plt.scatter(log_nu_midpoints, nuLnu(i), s=1, label= f'm = {int(i)} $M_\odot$')
 plt.xlabel(r'$log_{10}$[$\nu$ (Hz)]')
 plt.ylabel(r'$log_{10}$[$\nu L_{\nu}$ (erg $s^{-1}$)]')
 plt.grid(False)
 plt.legend()
-plt.ylim(0,)
+plt.ylim(0,40)
 plt.show()
-
-# Define the integration limits
-
-r_in = 6
-r_out = 1e5
 
