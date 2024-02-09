@@ -21,11 +21,11 @@ k = 1.380649e-16  # erg/K
 
 # Accretion rate
 
-m_dot = 1e18
+m_dot = 1e18 # g^(-1)
 
 # Define the Schwarzschild radius
 
-m = 10*m_sol_cgs  # Replace with the desired mass
+m = 10 * m_sol_cgs  # Replace with the desired mass
 r_g = g_big_cgs * m / c_cgs**2
 
 # Define the integration limits
@@ -41,7 +41,7 @@ nu_max = 1e19
 # Define the temperature function
 
 def T(rad):
-    numerator = 3 * g_big_cgs * m_dot * 10 * m_sol_cgs
+    numerator = 3 * g_big_cgs * m_dot * m
     denominator = 8 * np.pi * (rad)**3 * r_g**3 * sigma_cgs
     bracket = 1 - np.sqrt(r_in/(rad))
     return ((numerator/denominator)*bracket)**0.25
@@ -62,8 +62,8 @@ r_grid = np.linspace(np.log10(r_in), np.log10(r_out), num = r_num_points)
 
 r_midpoints = []
 for i in range(0,len (r_grid)-1):
-    m = 10**(r_grid[i] + ((r_grid[i+1] - r_grid[i]) / 2.0))
-    r_midpoints.append(m)
+    n = 10**(r_grid[i] + ((r_grid[i+1] - r_grid[i]) / 2.0))
+    r_midpoints.append(n)
 
 
 # Calculate temperatures for each midpoint using the T(rad) function
@@ -155,8 +155,8 @@ def integral(nu):
 
 nu_midpoints = []
 for i in range(0,len (nu_grid)-1):
-    m = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
-    nu_midpoints.append(m)
+    n = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
+    nu_midpoints.append(n)
     
 integral_values = [integral(i) for i in nu_midpoints]
 

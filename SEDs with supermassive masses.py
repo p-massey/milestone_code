@@ -34,7 +34,7 @@ r_out = 1e5
 
 # Define the range of nu values
 
-nu_min = 1e10  
+nu_min = 1e5  
 nu_max = 1e30 
 
 # Define temperature function
