@@ -25,7 +25,7 @@ m_dot = 1e18
 
 # Define the Schwarzschild radius
 
-m = 1e6*m_sol_cgs  # Replace with the desired mass
+m = 30*m_sol_cgs  # Replace with the desired mass
 r_g = g_big_cgs * m / c_cgs**2
 
 # Define the integration limits
@@ -38,9 +38,12 @@ nu_min = 1e10
 nu_max = 1e30 
 
 def nuLnu(r_out):
+    m = 1e6*m_sol_cgs
+    
+    r_g = g_big_cgs * (m) / c_cgs**2
     
     def T(rad):
-        numerator = 3 * g_big_cgs * m_dot * m * m_sol_cgs
+        numerator = 3 * g_big_cgs * m_dot * m 
         denominator = 8 * np.pi * (rad)**3 * r_g**3 * sigma_cgs
         bracket = 1 - np.sqrt(r_in/(rad))
         return ((numerator/denominator)*bracket)**0.25
@@ -54,8 +57,8 @@ def nuLnu(r_out):
 
     r_midpoints = []
     for i in range(0,len (r_grid)-1):
-        m = 10**(r_grid[i] + ((r_grid[i+1] - r_grid[i]) / 2.0))
-        r_midpoints.append(m)
+        n = 10**(r_grid[i] + ((r_grid[i+1] - r_grid[i]) / 2.0))
+        r_midpoints.append(n)
 
     # Define the flux function
 
@@ -88,8 +91,8 @@ def nuLnu(r_out):
 
     nu_midpoints = []
     for i in range(0,len (nu_grid)-1):
-        m = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
-        nu_midpoints.append(m)
+        n = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
+        nu_midpoints.append(n)
         
     integral_values = [integral(i) for i in nu_midpoints]
 
@@ -109,8 +112,8 @@ def nuLnu(r_out):
 nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 2000)
 nu_midpoints = []
 for i in range(0,len (nu_grid)-1):
-    m = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
-    nu_midpoints.append(m)
+    n = 10**(nu_grid[i] + ((nu_grid[i+1] - nu_grid[i]) / 2.0))
+    nu_midpoints.append(n)
 
 def total_luminosity(mass):
     area =[]
@@ -122,7 +125,7 @@ def total_luminosity(mass):
     return sum(area)
 
 
-r_out_grid = np.linspace(2, 10, num=9)
+r_out_grid = np.linspace(2, 12, num=11)
 
 print(r_out_grid)
 
@@ -133,7 +136,16 @@ print(luminosities)
 
 plt.figure(dpi=1000)
 plt.scatter(r_out_grid, luminosities, s=2)
-plt.xlabel(r'$log_{10}$[Outer radius of black hole calculated to ($M_\odot$)]')
+plt.xlabel(r'$log_{10}$[Outer radius calculated to ($R_g$)]')
 plt.ylabel(r'$log_{10}$[Total luminosity (erg)]')
+plt.grid(False)
+plt.show()
+
+errors = [np.abs(10**i-10**luminosities[-1])/10**luminosities[-1] for i in luminosities]
+
+plt.figure(dpi=1000)
+plt.scatter(r_out_grid, errors, s=2)
+plt.xlabel(r'$log_{10}$[Outer radius calculated to ($R_g$)]')
+plt.ylabel(r'Percentage residual')
 plt.grid(False)
 plt.show()

@@ -116,8 +116,6 @@ xs = [5, 6, 7, 8, 9, 10]
 mass_grid = [10**i for i in xs]
 
 
-m_values=[r'$1\times10^{5}$', r'$5\times10^{5}$']
-
 nu_grid = np.linspace(np.log10(nu_min), np.log10(nu_max), num = 1000)
 
 nu_midpoints = []
