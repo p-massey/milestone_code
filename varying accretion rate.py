@@ -21,7 +21,7 @@ k = 1.380649e-16  # erg/K
 
 # Define the Schwarzschild radius
 
-mass =  20*m_sol_cgs  # Replace with the desired mass
+mass =  1e8*m_sol_cgs  # Replace with the desired mass
 r_g = g_big_cgs * mass / c_cgs**2
 
 # Define the integration limits
@@ -108,7 +108,7 @@ def nuLnu(m_dot):
     return log_nu_l_nu
 
 
-xs = [18, 19, 20, 21, 22, 23, 24, 25]
+xs = [20, 21, 22, 23, 24, 25, 26]
     
 accretion_rate_grid = [10**i for i in xs]
 
